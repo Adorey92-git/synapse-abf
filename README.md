@@ -6,7 +6,7 @@ A lightweight, cross-platform ABF (Axon Binary Format) file viewer and analyzer 
 
 **The fastest way to get started is to download a pre-built application:**
 
-- **macOS**: Download `synapse-abf-mac.zip` - Extract and run the app (no installation required!)
+- **macOS**: Download [synapse-abf-mac.zip](https://github.com/Adorey92-git/synapse-abf/releases) - Extract and run the app (no installation required!)
 - **Windows**: Download `synapse-abf-windows.exe` - Double-click to run (coming soon)
 
 These pre-built applications include all dependencies and require no Python installation. Just download and run!
