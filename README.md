@@ -31,9 +31,15 @@ These pre-built applications include all dependencies and require no Python inst
 - **Peak Detection**: Detect peaks and troughs with configurable parameters
   - Minimum height, distance, and prominence thresholds
   - Peaks table with copyable data (Index, Time, Value, Type)
-- **Block Detection**: Automatic detection of experimental blocks/episodes
-  - Multiple detection methods (variance, mean, peak, combined)
-  - Adaptive thresholding
+- **Block Detection**: Automatic detection of blocking events in single-channel recordings
+  - Detects periods where current moves toward 0 pA from baseline
+  - If baseline is negative (e.g., -0.25 pA), blocks are values closer to 0 (less negative, e.g., -0.1 pA)
+  - If baseline is positive (e.g., 0.25 pA), blocks are values closer to 0 (less positive, e.g., 0.1 pA)
+  - Configurable baseline (auto-detect, manual, or use Cursor 1 Y value)
+  - Block threshold factor for sensitivity control
+  - Minimum block duration filter
+  - Blocks table with copyable data including average amplitude for each block
+  - Visual markers on plot showing detected block regions
 - **Insert Detection**: Detect inserts/responses based on baseline comparison
   - Configurable baseline and response windows
 - **Baseline Correction**: Set baseline using Cursor 1 Y value or manual input
@@ -175,6 +181,51 @@ python main.py path/to/file.abf
 3. Click "Apply Filter" or use View menu
 4. Select cutoff frequency and channel(s)
 5. Filter is permanent and cumulative
+
+#### Block Detection
+Block detection identifies blocking events in single-channel recordings where the current moves toward 0 pA from the baseline level.
+
+**How it works:**
+- Blocks are periods where the channel is blocked, causing current to move toward 0 pA
+- If baseline is negative (e.g., -0.25 pA), blocks are less negative values closer to 0 (e.g., -0.1 pA)
+- If baseline is positive (e.g., 0.25 pA), blocks are less positive values closer to 0 (e.g., 0.1 pA)
+
+**Using Block Detection:**
+1. Open your ABF file
+2. Enable both Cursor 1 and Cursor 2
+3. Position cursors to define the analysis region
+4. Click "Detect Blocks" button or use Analysis → Detect Blocks...
+5. Configure detection parameters:
+   - **Baseline Threshold**: 
+     - Auto: Automatically estimates baseline from data distribution
+     - Manual: Enter baseline value directly
+     - Use Cursor 1: Check box to use Cursor 1 Y position as baseline
+   - **Block Threshold Factor**: Sensitivity control (higher = more conservative, default: 2.0)
+   - **Min Block Duration**: Minimum duration for a block event (default: 0.001 s)
+6. Click OK to run detection
+
+**Output:**
+- **Blocks Table**: Automatically opens showing all detected blocks with:
+  - Block number
+  - Sweep number
+  - Start Time (seconds)
+  - End Time (seconds)
+  - Duration (seconds)
+  - **Average Amplitude**: Mean current during the block (key metric)
+  - Baseline Amplitude: Estimated baseline (open channel) level
+  - Block Depth: How much closer to 0 than baseline
+- **Visual Markers**: Block regions are highlighted on the plot with:
+  - Orange/yellow semi-transparent rectangles showing block regions
+  - Orange square markers indicating average amplitude for each block
+- **Summary Message**: Shows total blocks detected, sweeps analyzed, and average block amplitude
+
+**Tips:**
+- Use Cursor 1 to set baseline if you know the open channel level
+- Adjust Block Threshold Factor if too many or too few blocks are detected
+- Increase Min Block Duration to filter out brief noise events
+- Block markers update automatically when navigating between sweeps
+- Use "Clear Analysis" to remove all block markers from the plot
+- Copy block data from the table for further analysis in Excel or other programs
 
 ## Architecture
 
